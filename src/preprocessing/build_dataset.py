@@ -65,7 +65,7 @@ df['text'] = df['text'].apply(clean_text)
 df = df[df['text'].str.len() > 50]
 df = df.drop_duplicates(subset='text')
 
-# saving
-df[['text', 'label']].to_csv('data/processed/combined_en.csv', index=False)
-print(df['label'].value_counts())
-print(f'total: {len(df)}')
+if __name__ == '__main__':
+    df[['text', 'label']].to_csv('data/processed/combined_en.csv', index=False)
+    print(df['label'].value_counts())
+    print(f'total: {len(df)}')
