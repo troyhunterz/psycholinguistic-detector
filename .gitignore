@@ -12,3 +12,4 @@ notebooks/data/
 *.csv
 requirements_full.txt
 data/labeled/
+models/
