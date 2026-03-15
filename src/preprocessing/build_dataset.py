@@ -122,17 +122,35 @@ news = news[['text']]
 
 # liar dataset
 liar_raw = pd.read_csv(
-    "https://raw.githubusercontent.com/thiagorainmaker77/liar_dataset/master/train.tsv",
-    sep="\t", header=None,
-    names=["filename", "label", "text", "subject", "speaker", "job", "state", "party",
-           "barely_true", "false", "half_true", "mostly_true", "pants_fire", "context"],
-    on_bad_lines="skip"
+    'https://raw.githubusercontent.com/thiagorainmaker77/liar_dataset/master/train.tsv',
+    sep='\t', header=None,
+    names=['filename', 'label', 'text', 'subject', 'speaker', 'job', 'state', 'party',
+           'barely_true', 'false', 'half_true', 'mostly_true', 'pants_fire', 'context'],
+    on_bad_lines='skip'
 )
 
+liar_valid = pd.read_csv(
+    'https://raw.githubusercontent.com/thiagorainmaker77/liar_dataset/master/valid.tsv',
+    sep='\t', header=None,
+    names=['filename', 'label', 'text', 'subject', 'speaker', 'job', 'state', 'party',
+           'barely_true', 'false', 'half_true', 'mostly_true', 'pants_fire', 'context'],
+    on_bad_lines='skip'
+)
+
+liar_test = pd.read_csv(
+    'https://raw.githubusercontent.com/thiagorainmaker77/liar_dataset/master/test.tsv',
+    sep='\t', header=None,
+    names=['filename', 'label', 'text', 'subject', 'speaker', 'job', 'state', 'party',
+           'barely_true', 'false', 'half_true', 'mostly_true', 'pants_fire', 'context'],
+    on_bad_lines='skip'
+)
+
+liar_valid = liar_valid[['text']].copy()
+liar_test = liar_test[['text']].copy()
 liar = liar_raw[['text']].copy()
 
 # merging
-df = pd.concat([news, liar], ignore_index=True)
+df = pd.concat([news, liar, liar_valid, liar_test], ignore_index=True)
 
 df['text'] = df['text'].apply(clean_text)
 df = df[df['text'].str.len() > 50]
@@ -146,7 +164,7 @@ if __name__ == '__main__':
 
     non_rational = df[df['label'] != 'rational_argument']
     max_rational = len(
-        non_rational[non_rational['label'] == 'fear_appeal']) * 2
+        non_rational[non_rational['label'] == 'fear_appeal']) * 4
 
     rational = df[df['label'] == 'rational_argument'].sample(
         n=max_rational, random_state=42
