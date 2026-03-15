@@ -38,14 +38,28 @@ def weak_label(text):
 
     demagogy_words = [
         'either', 'only way', 'no choice', 'must choose', 'or else',
-        'with us or against us', 'no other option',
+        'with us or against us', 'no other option', 'only option',
+        'you must', 'we must', 'have to choose', 'forced to',
+
+        'they want', 'they will', 'they are trying', 'they dont want',
+        'they lied', 'they hide', 'they control', 'they really',
+
         'traitor', 'real american', 'true patriot', 'fake news',
         'mainstream media', 'deep state', 'radical left', 'radical right',
-        'socialist', 'fascist', 'communist', 'globalist',
+        'socialist', 'fascist', 'communist', 'globalist', 'marxist',
+        'liberal agenda', 'conservative agenda',
+
         'what they really mean', 'what he really said',
         'the truth about', 'the real agenda', 'the hidden truth',
-        'ordinary people', 'real people', 'working people vs',
-        'elites', 'establishment', 'swamp', 'corrupt'
+        'what really happened', 'the real reason',
+
+        'ordinary people', 'real people', 'working people',
+        'elites', 'establishment', 'swamp', 'corrupt politicians',
+        'out of touch', 'doesnt care about', 'against the people',
+
+        'everyone knows', 'everybody knows', 'its obvious',
+        'common sense', 'any fool can see', 'clearly',
+        'of course they', 'naturally they', 'as expected'
     ]
 
     emotion_words = [
