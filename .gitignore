@@ -5,7 +5,7 @@ __pycache__/
 cache/
 data/raw/
 data/processed/
-data/labeled/dataset.csv
+data/labeled/
 mlruns/
 *.egg-info/
 .ipynb_checkpoints/
