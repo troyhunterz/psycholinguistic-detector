@@ -61,7 +61,7 @@ mlflow ui
 ```
 
 ## Project Structure
-
+```
 psycholinguistic-detector/
 ├── data/
 │   ├── raw/          # Original datasets
@@ -84,6 +84,7 @@ psycholinguistic-detector/
 ├── Dockerfile
 ├── requirements.txt
 └── README.md
+```
 
 ## Stack
 
@@ -92,3 +93,5 @@ psycholinguistic-detector/
 - **Experiment tracking:** MLflow
 - **API:** FastAPI, Uvicorn
 - **Containerization:** Docker
+
+## Roadmap
