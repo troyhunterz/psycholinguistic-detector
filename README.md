@@ -149,6 +149,7 @@ psycholinguistic-detector/
 - **Containerization:** Docker
 
 ## Roadmap
+
 - [ ] Web interface for real-time text analysis
-- [ ] LLM explanation (GPT/Claude explains why textx is manipulative)
+- [ ] LLM explanation (GPT/Claude explains why text is manipulative)
 - [ ] Ukrainian, russian, language support
