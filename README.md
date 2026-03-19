@@ -19,11 +19,11 @@ Data Collection -> Weak Labeling -> Feature Extraction -> Model Training -> API
 ```
 
 **Pipeline:**
-- 'src/preprocessing/build_dataset.py'
-- 'src/features/extractor.py' 
-- 'notebooks/04_baseline.ipynb'
-- 'notebooks/05_bert.ipynb'
-- 'api/main.py'
+- 'src/preprocessing/build_dataset.py' - data collection and weak labeling
+- 'src/features/extractor.py' - 10 psycholinguistic features (we/they ratio, exclamations, modal verbs, etc.)
+- 'notebooks/04_baseline.ipynb' - TF-IDF + LogisticRegression baseline
+- 'notebooks/05_bert.ipynb' - DistilBERT fine-tuning
+- 'api/main.py' FastAPI inference server
 
 ## Results
 
@@ -45,12 +45,66 @@ Instead of manually labeling 10k texts, we used psycholinguistic keyword lists t
 ## Tutorial
 
 ### Local
+```bash
+# Clone repo
+git clone https://github.com/troyhunterz/psycholinguistic-detector
+cd psycholinguistic-detector
+
+# Setup environment
+python -m venv venv
+venv/Scripts/activate
+pip install -r requirements.txt
+
+# Run API
+uvicorn api.main:app --reload
+```
 
 ### Docker
+```bash
+docker build -t manipulation-detector
+docker run -p 8000:8000 manipulation-detector
+```
+
+API available at 'http://localhost:8000'
+Docs available at 'http://localhost:8000/docs'
 
 ## API Usage
+```bash
+curl -X POST "http://localhost:8000/predict" \
+     -H "Content-Type: application/json" \
+     -d '{"text": "Enemies want to destroy everything we love!"}'
+```
+
+Response:
+```json
+{
+    "label": "fear_appeal",
+    "confidence": 0.9843,
+    "all_scores": {
+    "authority_appeal": 0.0014,
+    "demagogy_tricks": 0.002,
+    "emotional_manipulation": 0.0107,
+    "fear_appeal": 0.9843,
+    "rational_argument": 0.0017
+    }
+}
+```
 
 ## Psycholinguistic Features
+The feature extractor(`src/features/extractor.py') computes 10 linguistic signals:
+
+| Feature | Description | Manipulation signal |
+|---------|-------------|---------------------|
+| `we_ratio` | Proportion of "we/our/us" | In-group construction |
+| `they_ratio` | Proportion of "they/enemy" | Out-group construction |
+| `exclaim_ratio` | Exclamation sentences ratio | Emotional amplification |
+| `question_ratio` | Question sentences ratio | Rhetorical questions |
+| `modal_ratio` | Modal verbs ratio | False obligation |
+| `logic_count` | Logical connectors count | Rational argumentation |
+| `adj_ratio` | Adjective ratio | Emotional loading |
+| `verb_ratio` | Verb ratio | Action orientation |
+| `avg_sent_len` | Average sentence length | Complexity |
+| `caps_ratio` | ALL CAPS words ratio | Emphasis/shouting |
 
 ## Experiments
 
@@ -95,3 +149,6 @@ psycholinguistic-detector/
 - **Containerization:** Docker
 
 ## Roadmap
+- [ ] Web interface for real-time text analysis
+- [ ] LLM explanation (GPT/Claude explains why textx is manipulative)
+- [ ] Ukrainian, russian, language support
