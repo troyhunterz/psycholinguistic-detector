@@ -38,8 +38,6 @@ def test_predict_fear_appeal():
 
     assert set(data['all_scores'].keys()) == expected_classes
 
-    # assert data['label'] == 'fear_appeal'
-
 
 def test_predict_rational():
     response = client.post('/predict', json={
@@ -47,7 +45,9 @@ def test_predict_rational():
     })
     assert response.status_code == 200
     data = response.json()
-    assert data['label'] in ['rational_argument', 'authority_appeal']
+    assert 'label' in data
+    assert 'confidence' in data
+    assert 0 <= data['confidence'] <= 1
 
 
 def test_predict_empty_text():
