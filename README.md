@@ -1,7 +1,7 @@
 # Psycholinguistic Manipulation Detector
 
 ## Problem
-Text manipulation is everywhere - political speeches, fake news, propoganda. This project automatically classifies text by manipulation technique, helping redears identyify when they are being manipulated.
+Text manipulation is everywhere - political speeches, fake news, propaganda. This project automatically classifies text by manipulation technique, helping readers identify when they are being manipulated.
 
 ## Classes
 
@@ -40,7 +40,7 @@ Target metric: F1-macro ≥ 0.70
 - **Labeling strategy:** Weak supervision - keyword-based labeling by content, not source
 
 **Why weak labeling?**
-Instead of manually labeling 10k texts, we used psycholinguistic keyword lists to assign labels based on what the text *contains*, not where it came from. This give more accurate labels, than mapping entire datasets to single classes.
+Instead of manually labeling 10k texts, we used psycholinguistic keyword lists to assign labels based on what the text *contains*, not where it came from. This give more accurate labels than mapping entire datasets to single classes.
 
 ## Tutorial
 
