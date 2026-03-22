@@ -27,7 +27,8 @@ jobs:
                 pip install torch --index-url https://download.pytorch.org/whl/cpu
                 pip install transformers fastapi uvicorn pydantic
                 pip install groq python-dotenv
-                
+                pip install slowapi
+
           - name: Download spaCy model
             run: python -m spacy download en_core_web_sm
 
