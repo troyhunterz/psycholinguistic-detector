@@ -1,11 +1,17 @@
 import json
 import torch
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from src.explainer.llm_explainer import explain as llm_explain
+
+limiter = Limiter(key_func=get_remote_address)
 
 app = FastAPI(
     title='Psycholinguistic Manipulation Detector',
@@ -13,10 +19,12 @@ app = FastAPI(
     version='1.0.0'
 )
 
+app.state.limiter = limiter
+
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 device = torch.device('cpu')
-
 tokenizer = AutoTokenizer.from_pretrained('models/tokenizer')
-
 model = AutoModelForSequenceClassification.from_pretrained(
     'distilbert-base-uncased',
     num_labels=5,
@@ -26,7 +34,6 @@ model = AutoModelForSequenceClassification.from_pretrained(
 model.load_state_dict(torch.load(
     'models/distilbert_best.pt', map_location=device, weights_only=True))
 model.to(device)
-
 model.eval()
 
 with open('models/classes.json') as f:
@@ -63,7 +70,8 @@ def health():
 
 
 @app.post('/predict', response_model=PredictionOutput)
-def predict(input: TextInput):
+@limiter.limit('90/minute')
+def predict(request: Request, input: TextInput):
     encoding = tokenizer(
         input.text,
         max_length=128,
@@ -79,11 +87,9 @@ def predict(input: TextInput):
         )
 
     probs = torch.softmax(outputs.logits, dim=1)[0]
-
     pred_idx = torch.argmax(probs).item()
     pred_label = classes[pred_idx]
     confidence = probs[pred_idx].item()
-
     all_scores = {
         classes[i]: round(probs[i].item(), 4)
         for i in range(len(classes))
@@ -97,7 +103,8 @@ def predict(input: TextInput):
 
 
 @app.post('/analyze', response_model=AnalysisOutput)
-def analyze(input: TextInput):
+@limiter.limit('30/minute')
+def analyze(request: Request, input: TextInput):
     encoding = tokenizer(
         input.text,
         max_length=128,
