@@ -2,7 +2,9 @@ import json
 import torch
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
 from pydantic import BaseModel
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from slowapi import Limiter, _rate_limit_exceeded_handler
@@ -22,6 +24,8 @@ app = FastAPI(
 app.state.limiter = limiter
 
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+app.mount('/static', StaticFiles(directory='api/static'), name='static')
 
 device = torch.device('cpu')
 tokenizer = AutoTokenizer.from_pretrained('models/tokenizer')
@@ -61,7 +65,7 @@ class AnalysisOutput(BaseModel):
 
 @app.get('/')
 def root():
-    return {'status': 'ok', 'message': 'Manipulation Detector API'}
+    return FileResponse('api/static/index.html')
 
 
 @app.get('/health')
