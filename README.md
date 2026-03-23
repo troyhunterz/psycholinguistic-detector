@@ -217,8 +217,8 @@ GitHub Actions runs on every push and pull request to `main`:
 
 ## Roadmap
 
-- [+] Web interface for real-time text analysis
-- [+] LLM explanation (GPT/Claude explains why text is manipulative)
+- [x] Web interface for real-time text analysis
+- [x] LLM explanation (GPT/Claude explains why text is manipulative)
 - [ ] Ukrainian, russian, language support
 
 ## License
