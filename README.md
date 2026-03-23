@@ -55,6 +55,15 @@ psycholinguistic_manipulation_detector/
 └── .github/workflows/ci.yml
 ```
 
+## Results
+
+| Model | F1-macro | Notes |
+|-------|----------|-------|
+| TF-IDF + LogReg | 0.67 | Baseline, fast |
+| DistilBERT (fine-tuned) | 0.77 | Best model, 6 epochs |
+
+Target metric: F1-macro ≥ 0.70 
+
 ## Quickstart
 
 ### 1. Clone and install
