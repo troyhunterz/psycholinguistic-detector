@@ -144,7 +144,7 @@ Requires `GROQ_API_KEY`.
 }
 ```
 
-Interactive docs available at [http://localhost:8000/docs](http://localhost:8000/docs).
+Interactive docs available at [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ---
 
@@ -172,16 +172,16 @@ Fine-tune DistilBERT on the processed dataset (training script not shown: output
 
 | Feature | Description |
 | --- | --- |
-| `we_ratio` | |
-| `they_ratio` | |
-| `exclaim_ratio` | |
-| `question_ratio` | |
-| `modal_ratio` | |
-| `logic_count` | |
-| `adj_ratio` | |
-| `verb_ratio` | |
-| `avg_sent_len` | |
-| `caps_ratio` | |
+| `we_ratio` | Proportion of "we/our/us" |
+| `they_ratio` | Proportion of "they/enemy" |
+| `exclaim_ratio` | Exclamation sentences ratio |
+| `question_ratio` | Question sentences ratio |
+| `modal_ratio` | Modal verbs ratio |
+| `logic_count` | Logical connectors count |
+| `adj_ratio` | Adjective ratio |
+| `verb_ratio` | Verb ratio |
+| `avg_sent_len` | Average sentence length |
+| `caps_ratio` | ALL CAPS words ratio |
 
 ---
 
