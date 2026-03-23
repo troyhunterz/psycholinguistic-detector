@@ -8,7 +8,171 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="bg-gray-950 text-white min-h-screen">
+    <div class="max-w-3xl mx-auto px-4 py-12">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-white mb-3">
+                🧠 Manipulation Detector 🧠
+            </h1>
+            <p class="text-gray-400 text-lg">
+                Detects psycholinguistic manipulation techniques in text
+            </p>
+        </div>
+
+
+        <div class="bg-gray-900 rounded-2xl p-6 mb-4 border border-gray-800">
+            <textarea id="inputText"
+                placeholder="Paste any text here - political speech, news article, social media post..."
+                class="w-full bg-gray-800 text-white rounded-xl p-4 h-40 resize-none outline-none border-gray-700 focus:border-blue-500 transition-colors text-sm"></textarea>
+
+            <div class="flex gap-3 mt-4">
+                <button onclick="analyze(false)"
+                    class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-xl transition-colors">
+                    Quick Classify
+                </button>
+
+                <button onclick="analyze(true)"
+                    class="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-semibold py-3 px-6 rounded-xl transition-colors">
+                    Deep Analysis (AI)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result" class="hidden max-w-3xl mx-auto px-4 mt-2">
+        <div class="bg-gray-900 rounded-2xl p-6 mb-4 border border-gray-800">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <div id="labelBadge" class="inline-block px-4 py-2 rounded-full text-sm font-bold mb-2"></div>
+                    <div class="text-gray-400 text-sm">
+                        Confidence: <span id="confidence" class="text-white font-semibold"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="scores" class="space-y-2"></div>
+        </div>
+
+        <div id="explanationBlock" class="hidden bg-gray-900 rounded-2xl p-6 border border-purple-800 mb-12">
+            <h3 class="text-purple-400 font-semibold mb-3">AI Explanation</h3>
+            <p id="explanation" class="text-gray-200 text-base leading-relaxed whitespace-pre-line"></p>
+        </div>
+    </div>
+
+    <div id="loading" class="hidden text-center py-8 max-w-3xl mx-auto px-4">
+        <div class="inline-block w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin">
+        </div>
+        <p class="text-gray-400 mt-3">Analyzing...</p>
+    </div>
+
+    <div id="error"
+        class="hidden bg-red-900 border border-red-700 rounded-2xl p-4 text-red-300 text-sm mb-4 max-w-3xl mx-auto px-4">
+    </div>
+
+    </div>
+
+    <script>
+        const CLASS_COLORS = {
+            'fear_appeal': { bg: 'bg-red-600', text: 'Fear Appeal' },
+            'emotional_manipulation': { bg: 'bg-orange-600', text: 'Emotional Manipulation' },
+            'demagogy_tricks': { bg: 'bg-yellow-600', text: 'Demagogy' },
+            'authority_appeal': { bg: 'bg-blue-600', text: 'Authority Appeal' },
+            'rational_argument': { bg: 'bg-green-600', text: 'Rational Argument' },
+        }
+
+        async function analyze(deep) {
+            const text = document.getElementById('inputText').value.trim()
+
+            if (!text) {
+                showError('Please enter some text first.')
+                return
+            }
+
+            showLoading(true)
+            hideResult()
+            hideError()
+
+            try {
+                const endpoint = deep ? '/analyze' : '/predict'
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                })
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`)
+                }
+
+                const data = await response.json()
+
+                showResult(data, deep)
+
+            } catch (err) {
+                showError(err.message)
+            } finally {
+                showLoading(false)
+            }
+        }
+
+        function showResult(data, deep) {
+            const cls = CLASS_COLORS[data.label] || { bg: 'bg-gray-600', text: data.label }
+
+            const badge = document.getElementById('labelBadge')
+            badge.className = `inline-block px-4 py-2 rounded-full text-sm font-bold mb-2 ${cls.bg}`
+            badge.textContent = cls.text
+
+            document.getElementById('confidence').textContent = `${(data.confidence * 100).toFixed(1)}%`
+
+            const scoresDiv = document.getElementById('scores')
+            scoresDiv.innerHTML = ''
+
+            const sorted = Object.entries(data.all_scores).sort((a, b) => b[1] - a[1])
+
+            sorted.forEach(([cls_name, score]) => {
+                const pct = (score * 100).toFixed(1)
+                const color = CLASS_COLORS[cls_name]?.bg || 'bg-gray-600'
+                scoresDiv.innerHTML += `
+                    <div class="flex items-center gap-3 text-sm">
+                        <div class="w-36 text-gray-400 text-right text-xs">${CLASS_COLORS[cls_name]?.text || cls_name}</div>
+                        <div class="flex-1 bg-gray-800 rounded-full h-2">
+                            <div class="${color} h-2 rounded-full transition-all" style="width: ${pct}%"></div>
+                        </div>
+                        <div class="w-10 text-gray-400 text-xs">${pct}%</div>
+                    </div>
+                `
+            })
+
+            if (deep && data.explanation) {
+                document.getElementById('explanation').textContent = data.explanation
+                document.getElementById('explanationBlock').classList.remove('hidden')
+            } else {
+                document.getElementById('explanationBlock').classList.add('hidden')
+            }
+
+            document.getElementById('result').classList.remove('hidden')
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').classList.toggle('hidden', !show)
+        }
+
+        function hideResult() {
+            document.getElementById('result').classList.add('hidden')
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('error')
+            el.textContent = msg
+            el.classList.remove('hidden')
+        }
+
+        function hideError() {
+            document.getElementById('error').classList.add('hidden')
+        }
+
+    </script>
 
 </body>
 
