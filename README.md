@@ -1,4 +1,4 @@
-# Psycholinguistic Manipulation Detector
+# Psycholinguistic Manipulation Detector 
 
 A machine learning tool that detects rhetorical manipulation in text: political speeches, news articles, social media posts, and more.
 
