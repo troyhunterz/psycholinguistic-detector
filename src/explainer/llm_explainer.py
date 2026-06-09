@@ -36,7 +36,7 @@ Be specific and educational. Maximum 150 words.'''
 
 def explain(text: str, label: str, confidence: float) -> str:
     '''
-    We send a request, and recieve a response
+    We send a request, and receive a response
     text        - source text
     label       - predicted class from our model
     confidence  - model confidence, ranging from 0 to 1
