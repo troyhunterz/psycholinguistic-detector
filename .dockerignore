@@ -1,0 +1,14 @@
+venv/
+__pycache__/
+*.pyc
+.git/
+.env
+data/
+mlruns/
+mlflow.db
+notebooks/
+scripts/
+models/hf_model/
+models/onnx/
+models/distilbert_best.pt
+models/baseline_logreg.pk1

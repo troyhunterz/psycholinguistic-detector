@@ -73,9 +73,10 @@ git clone https://github.com/troyhunterz/psycholinguistic-detector.git
 cd psycholinguistic-detector
 python -m venv venv
 venv\Scripts\activate
-
-pip install -r requirements.txt
 ```
+
+Run the service:   `pip install -r requirements.txt`
+Train | develop:   `pip install -r requirements-dev.txt`
 
 ### 2. Add your Groq API key
 
