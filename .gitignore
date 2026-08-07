@@ -13,6 +13,8 @@ notebooks/data/
 *.csv
 requirements_full.txt
 data/labeled/
-models/
+models/distilbert_best.pt
+models/hf_model/
+models/onnx/
 mlflow.db
 api/main_torch.py
